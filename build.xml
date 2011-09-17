@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<project default="compile">
+    
+    <property name="src" value="src/main/closure" />
+    <property name="test" value="src/test/closure" />
+    <property name="build" value="build" />
+
+    <property name="compilation-mode" value="script" />
+    <property name="compilation-level" value="WHITESPACE_ONLY" />
+
+    <property name="closure-lib" value="closure-library-20110323-r790/closure" />
+    <property name="closure-compiler" value="compiler-latest" />
+
+	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="${closure-compiler}/compiler.jar"/>
+
+    <target name="clean">
+        <delete>
+            <fileset dir="build" includes="*.js"/>
+        </delete>
+    </target>
+
+	<target name="compile">
+        <exec failonerror="yes" failifexecutionfails="yes" logError="yes" output="${build}/artifact.js" executable="${closure-lib}/bin/calcdeps.py">
+            <arg line="-i ${src}/test.js" />
+            <arg line="-p ${closure-lib}" />
+            <arg line="-o ${compilation-mode}" />
+            <arg line="-c ${closure-compiler}/compiler.jar" />
+            <arg line="-f '--compilation_level=${compilation-level}'" />
+        </exec>
+
+        <!--
+		<jscomp compilationLevel="simple" warning="verbose" debug="false" output="${build}/artifact.js">
+			<sources dir="${src}">
+				<file name="test.js"/>
+			</sources>
+		</jscomp>
+        -->
+	</target>
+</project>
