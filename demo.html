@@ -1,6 +1,7 @@
 <html>
 
 <head>
+<script type="text/javascript" src="closure-library-20110323-r790/closure/goog/base.js"></script>
 <script type="text/javascript" src="build/artifact.js"></script>
 </head>
 
@@ -8,9 +9,16 @@
 
 <h1>Closure Sandbox</h1>
 
+<p>
 <script>
 var hello = new sean.test.HelloProvider("Sean");
 hello.say();
+</script>
+</p>
+
+<div id="thumbs" />
+<script>
+var thumbs = new sean.test.ThumbViewer("thumbs");
 </script>
 
 </body>

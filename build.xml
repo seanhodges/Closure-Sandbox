@@ -4,8 +4,9 @@
     <property name="src" value="src/main/closure" />
     <property name="test" value="src/test/closure" />
     <property name="build" value="build" />
+    <property name="src-files" value="${src}/helloprovider.js ${src}/thumbviewer.js" />
 
-    <property name="compilation-mode" value="script" />
+    <property name="compilation-mode" value="compiled" />
     <property name="compilation-level" value="WHITESPACE_ONLY" />
 
     <property name="closure-lib" value="closure-library-20110323-r790/closure" />
@@ -20,8 +21,13 @@
     </target>
 
 	<target name="compile">
+        <exec failonerror="yes" failifexecutionfails="yes" logError="yes" executable="gjslint">
+            <arg line="--nojsdoc" />
+            <arg line="${src-files}" />
+        </exec>
+
         <exec failonerror="yes" failifexecutionfails="yes" logError="yes" output="${build}/artifact.js" executable="${closure-lib}/bin/calcdeps.py">
-            <arg line="-i ${src}/test.js" />
+            <arg line="-i ${src-files}" />
             <arg line="-p ${closure-lib}" />
             <arg line="-o ${compilation-mode}" />
             <arg line="-c ${closure-compiler}/compiler.jar" />
