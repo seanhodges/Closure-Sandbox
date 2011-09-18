@@ -41,20 +41,5 @@ sean.test.ThumbViewer.prototype.createRow = function(e) {
 
 sean.test.ThumbViewer.prototype.deleteRow = function(id) {
     rows = this.getElement().getElementsByTagName('div');
-    this.rowCount_ = 0;
-
-    for (i = 0; i < rows.length; i++) {
-        if (i == id) {
-            // Delete the target field
-            goog.dom.removeNode(rows[i]);
-        }
-        else {
-            // Re-index the other fields
-            var field = rows[id].getElementsByTagName('input')[0];
-            alert('before: ' + field.name);
-            field.name = 'contentData[thumbnails][' + this.rowCount_ + ']';
-            alert('after: ' + field.name);
-            this.rowCount_ += 1;
-        }
-    }
+    goog.dom.removeNode(rows[id]);
 };
