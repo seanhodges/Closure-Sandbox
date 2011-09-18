@@ -21,11 +21,22 @@
     </target>
 
 	<target name="compile">
+        <!-- Lint -->
         <exec failonerror="yes" failifexecutionfails="yes" logError="yes" executable="gjslint">
             <arg line="--nojsdoc" />
             <arg line="${src-files}" />
         </exec>
 
+        <!-- Deps -->
+        <!--
+        <exec failonerror="yes" failifexecutionfails="yes" logError="yes" output="${build}/artifact-deps.js" executable="${closure-lib}/bin/calcdeps.py">
+            <arg line="-i ${src}" />
+            <arg line="-p ${closure-lib}" />
+            <arg line="-o deps" />
+        </exec>
+        -->
+
+        <!-- Compile -->
         <exec failonerror="yes" failifexecutionfails="yes" logError="yes" output="${build}/artifact.js" executable="${closure-lib}/bin/calcdeps.py">
             <arg line="-i ${src}" />
             <arg line="-p ${closure-lib}" />

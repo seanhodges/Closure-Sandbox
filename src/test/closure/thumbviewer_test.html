@@ -4,9 +4,12 @@
 <title>Closure Unit Tests - sean.test.ThumbViewer</title>
 
 <script type="text/javascript" src="../../../closure-library-20110323-r790/closure/goog/base.js"></script>
+<script type="text/javascript" src="../../../build/artifact-deps.js"></script>
 <script type="text/javascript" src="../../../build/artifact.js"></script>
 
 <script>
+  goog.require('goog.dom');
+  goog.require('goog.events');
   goog.require('sean.test.ThumbViewer');
   goog.require('goog.testing.jsunit');
 </script>
@@ -25,7 +28,7 @@
 
     function testThumbsViewerInitialisesCorrectly() {
         var thumbs = new sean.test.ThumbViewer();
-        var el = document.getElementById('thumbs_container_1');
+        var el = document.getElementById('thumbs_container');
         thumbs.decorate(el);
 
         assertEquals(el.id, thumbs.getElement().id);
@@ -33,7 +36,7 @@
 
     function testCreateRows() {
         var thumbs = new sean.test.ThumbViewer();
-        var el = document.getElementById('thumbs_container_2');
+        var el = document.getElementById('thumbs_container');
         thumbs.decorate(el);
 
         thumbs.createRow(thumbData);
@@ -45,7 +48,7 @@
 
     function testDeletesTheLastRow() {
         var thumbs = new sean.test.ThumbViewer();
-        var el = document.getElementById('thumbs_container_3');
+        var el = document.getElementById('thumbs_container');
         thumbs.decorate(el);
 
         thumbData.value = '1';
@@ -55,7 +58,10 @@
         thumbData.value = '3';
         thumbs.createRow(thumbData);
 
-        thumbs.deleteRow(2);
+        //thumbs.deleteRow(2);
+        var btn = document.getElementById('thumb_viewer_row_delete_2');
+        var ev = new goog.events.Event(null, btn);
+        thumbs.onDeleteClick(ev);
 
         assertEquals(2, el.getElementsByTagName('img').length);
 
@@ -69,7 +75,7 @@
 
     function testDeleteARowAndReindexesFieldNames() {
         var thumbs = new sean.test.ThumbViewer();
-        var el = document.getElementById('thumbs_container_4');
+        var el = document.getElementById('thumbs_container');
         thumbs.decorate(el);
 
         thumbData.value = '1';
@@ -79,7 +85,10 @@
         thumbData.value = '3';
         thumbs.createRow(thumbData);
 
-        thumbs.deleteRow(1);
+        //thumbs.deleteRow(1);
+        var btn = document.getElementById('thumb_viewer_row_delete_1');
+        var ev = new goog.events.Event(null, btn);
+        thumbs.onDeleteClick(ev);
 
         assertEquals(2, el.getElementsByTagName('img').length);
 
@@ -92,10 +101,7 @@
     }
 </script>
 
-<div id="thumbs_container_1"></div>
-<div id="thumbs_container_2"></div>
-<div id="thumbs_container_3"></div>
-<div id="thumbs_container_4"></div>
+<div id="thumbs_container"></div>
 
 </body>
 
