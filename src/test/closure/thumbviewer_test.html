@@ -1,0 +1,102 @@
+<html>
+
+<head>
+<title>Closure Unit Tests - sean.test.ThumbViewer</title>
+
+<script type="text/javascript" src="closure-library-20110323-r790/closure/goog/base.js"></script>
+<script type="text/javascript" src="build/artifact.js"></script>
+
+<script>
+  goog.require('sean.test.ThumbViewer');
+  goog.require('goog.testing.jsunit');
+</script>
+
+</head>
+
+<body>
+
+<script>
+    var thumbData = {
+        'width' : 100,
+        'height' : 50,
+        'value' : 'rifn2493ndid3',
+        'proxyUrl' : 'http://code.google.com/images/code_labs_logo.gif'
+    };
+
+    function testThumbsViewerInitialisesCorrectly() {
+        var thumbs = new sean.test.ThumbViewer();
+        var el = document.getElementById('thumbs_container_1');
+        thumbs.decorate(el);
+
+        assertEquals(el.id, thumbs.getElement().id);
+    }
+
+    function testCreateRows() {
+        var thumbs = new sean.test.ThumbViewer();
+        var el = document.getElementById('thumbs_container_2');
+        thumbs.decorate(el);
+
+        thumbs.createRow(thumbData);
+        thumbs.createRow(thumbData);
+        thumbs.createRow(thumbData);
+
+        assertEquals(3, el.getElementsByTagName('img').length);
+    }
+
+    function testDeletesTheLastRow() {
+        var thumbs = new sean.test.ThumbViewer();
+        var el = document.getElementById('thumbs_container_3');
+        thumbs.decorate(el);
+
+        thumbData.value = '1';
+        thumbs.createRow(thumbData);
+        thumbData.value = '2';
+        thumbs.createRow(thumbData);
+        thumbData.value = '3';
+        thumbs.createRow(thumbData);
+
+        thumbs.deleteRow(2);
+
+        assertEquals(2, el.getElementsByTagName('img').length);
+
+        var fields = el.getElementsByTagName('input');
+        assertEquals(2, fields.length);
+        assertEquals('contentData[thumbnails][0]', fields[0].name);
+        assertEquals('1', fields[0].value);
+        assertEquals('contentData[thumbnails][1]', fields[1].name);
+        assertEquals('2', fields[1].value);
+    }
+
+    function testDeleteARowAndReindexesFieldNames() {
+        var thumbs = new sean.test.ThumbViewer();
+        var el = document.getElementById('thumbs_container_4');
+        thumbs.decorate(el);
+
+        thumbData.value = '1';
+        thumbs.createRow(thumbData);
+        thumbData.value = '2';
+        thumbs.createRow(thumbData);
+        thumbData.value = '3';
+        thumbs.createRow(thumbData);
+
+        thumbs.deleteRow(1);
+
+        assertEquals(2, el.getElementsByTagName('img').length);
+
+        var fields = el.getElementsByTagName('input');
+        assertEquals(2, fields.length);
+        assertEquals('contentData[thumbnails][0]', fields[0].name);
+        assertEquals('1', fields[0].value);
+        assertEquals('contentData[thumbnails][1]', fields[1].name);
+        assertEquals('3', fields[1].value);
+    }
+</script>
+
+<div id="thumbs_container_1"></div>
+<div id="thumbs_container_2"></div>
+<div id="thumbs_container_3"></div>
+<div id="thumbs_container_4"></div>
+
+</body>
+
+</html>

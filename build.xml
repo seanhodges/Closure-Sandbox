@@ -27,7 +27,7 @@
         </exec>
 
         <exec failonerror="yes" failifexecutionfails="yes" logError="yes" output="${build}/artifact.js" executable="${closure-lib}/bin/calcdeps.py">
-            <arg line="-i ${src-files}" />
+            <arg line="-i ${src}" />
             <arg line="-p ${closure-lib}" />
             <arg line="-o ${compilation-mode}" />
             <arg line="-c ${closure-compiler}/compiler.jar" />
