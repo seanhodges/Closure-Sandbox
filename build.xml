@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
-<project default="compile">
+<!DOCTYPE project>
+
+<project name="closure-sandbox" default="compile">
     
     <property name="src" value="src/main/closure" />
     <property name="test" value="src/test/closure" />
@@ -9,48 +11,53 @@
     <property name="compilation-mode" value="compiled" />
     <property name="compilation-level" value="WHITESPACE_ONLY" />
 
-    <property name="closure-lib" value="closure-library-20110323-r790/closure" />
-    <property name="closure-compiler" value="compiler-latest" />
+    <property name="closure-lib" value="closure/closure-library-20110323-r790" />
+    <property name="closure-compiler" value="closure/compiler-20110811" />
+	<property name="closure-linter" value="closure/closure_linter-2.3.1" />
+	<property name="closure-deps" value="closure/python-modules" />
 
 	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="${closure-compiler}/compiler.jar"/>
 
     <target name="clean">
+    	<mkdir dir="build" />
         <delete>
             <fileset dir="build" includes="*.js"/>
         </delete>
     </target>
 
-	<target name="compile">
+	<target name="compile" depends="clean">
         <!-- Lint -->
-        <exec failonerror="yes" failifexecutionfails="yes" logError="yes" executable="gjslint">
-            <arg line="--nojsdoc" />
+        <exec failonerror="yes" failifexecutionfails="yes" logError="yes" executable="python">
+        	<env key="PYTHONPATH" value="${closure-linter};${closure-deps}/python-gflags-1.6" />
+        	<arg line="${closure-linter}/closure_linter/gjslint.py" />
+        	<arg line="--nojsdoc" />
             <arg line="${src-files}" />
         </exec>
 
-        <!-- Deps -->
-        <!--
-        <exec failonerror="yes" failifexecutionfails="yes" logError="yes" output="${build}/artifact-deps.js" executable="${closure-lib}/bin/calcdeps.py">
-            <arg line="-i ${src}" />
-            <arg line="-p ${closure-lib}" />
-            <arg line="-o deps" />
-        </exec>
-        -->
-
         <!-- Compile -->
-        <exec failonerror="yes" failifexecutionfails="yes" logError="yes" output="${build}/artifact.js" executable="${closure-lib}/bin/calcdeps.py">
+		<exec failonerror="yes" failifexecutionfails="yes" logError="yes" output="${build}/artifact.js" executable="python">
+        	<env key="PYTHONPATH" value="${closure-lib}" />
+        	<arg line="${closure-lib}/closure/bin/calcdeps.py" />
             <arg line="-i ${src}" />
             <arg line="-p ${closure-lib}" />
             <arg line="-o ${compilation-mode}" />
             <arg line="-c ${closure-compiler}/compiler.jar" />
             <arg line="-f '--compilation_level=${compilation-level}'" />
         </exec>
-
-        <!--
-		<jscomp compilationLevel="simple" warning="verbose" debug="false" output="${build}/artifact.js">
-			<sources dir="${src}">
-				<file name="test.js"/>
-			</sources>
-		</jscomp>
-        -->
+		
+		<!--
+		Can't use this approach, since it requires symbol exporting...
+		
+		<exec executable="python" failonerror="true">
+			<arg line="${closure-lib}/closure/bin/build/closurebuilder.py"/>
+			<arg line="-/-root=${closure-lib}"/>
+			<arg line="-/-root=${src}"/>
+			<arg line="-/-namespace=&quot;Application&quot;"/>
+			<arg line="-/-output_mode=${compilation-mode}"/>
+			<arg line="-/-compiler_jar=${closure-compiler}/compiler.jar"/>
+			<arg line="-f '-/-compilation_level=${compilation-level}'" />
+			<arg line="-/-output_file=${build}/artifact.js"/>
+		</exec>
+		-->
 	</target>
 </project>
